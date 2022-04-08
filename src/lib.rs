@@ -1,12 +1,3 @@
-// #[cfg(test)]
-// mod tests {
-//     #[test]
-//     fn it_works() {
-//         let result = 2 + 2;
-//         assert_eq!(result, 4);
-//     }
-// }
-
 pub mod schema;
 pub mod models;
 
@@ -29,6 +20,7 @@ pub fn establish_connection() -> PgConnection {
 }
 
 use self::models::{Post, NewPost};
+use self::models::{User, NewUser};
 
 pub fn create_post<'a>(conn: &PgConnection, title: &'a str, body: &'a str) -> Post {
     use schema::posts;
@@ -36,11 +28,26 @@ pub fn create_post<'a>(conn: &PgConnection, title: &'a str, body: &'a str) -> Po
     let new_post = NewPost {
         title,
         body,
-        published: Some(&true),
+        published: Some(&false),
+        user_id: None
     };
 
     diesel::insert_into(posts::table)
         .values(&new_post)
         .get_result(conn)
         .expect("Error saving new post")
+}
+
+pub fn create_user<'a>(conn: &PgConnection, name: &'a str, phone: &'a str) -> User {
+    use schema::users;
+
+    let new_user = NewUser {
+        name,
+        phone,
+    };
+
+    diesel::insert_into(users::table)
+        .values(&new_user)
+        .get_result(conn)
+        .expect("Error saving new user")
 }
