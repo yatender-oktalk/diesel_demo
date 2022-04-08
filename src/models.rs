@@ -1,6 +1,7 @@
 use super::schema::{posts, users};
 
-#[derive(Debug, Queryable)]
+#[derive(Debug, Queryable, Associations, Identifiable)]
+#[belongs_to(User)]
 pub struct Post {
     pub id: i32,
     pub title: String,
@@ -17,7 +18,7 @@ pub struct NewPost<'a> {
     pub published: Option<&'a bool>,
     pub user_id: Option<&'a i32>,
 }
-#[derive(Debug, Queryable)]
+#[derive(Debug, Queryable, Identifiable)]
 pub struct User {
   pub id: i32,
   pub name: String,
